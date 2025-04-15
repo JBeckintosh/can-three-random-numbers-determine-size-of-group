@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random Numbers to calculate Group Size</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+        .number, .group-size {
+            font-size: 1.5em;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Random Numbers and Group Size</h1>
+    <div class="number" id="randomOddNumber">Random Odd Number: </div>
+    <div class="number" id="randomEvenNumber">Random Even Number: </div>
+    <div class="number" id="randomOtherUniqueNumber">Random Other Unique Number: </div>
+    
+    <br />
+
+    <div class="number" id="remainderFromGroupsOfSizeRandomOddNumber">Remainder from groups of </div>
+    <div class="number" id="remainderFromGroupsOfSizeRandomEvenNumber">Remainder from groups of </div>
+    <div class="number" id="remainderFromGroupsOfSizeRandomOtherUniqueNumber">Remainder from groups of </div>
+
+    <br />
+
+    <div class="number" id="estimatedGroupSize">Estimated Group Size: </div>
+    <div class="group-size" id="groupSize">Actual Group Size: </div>
+
+    <script>
+        // Generate a random number greater than 1 and less than 16 that is not equal to two other numbers
+        function generateUniqueRandomNumber(min, max, exclude) {
+            let randomNumber;
+            do {
+                randomNumber = Math.floor(Math.random() * (max - min)) + min;
+            } while (exclude.includes(randomNumber));
+            return randomNumber;
+        }
+
+        // Function to generate an array of numbers between 20 and 100
+        function generateNumbersInRange(randomNumber, remainder) {
+            const result = [];
+            let currentNumber = randomNumber + remainder;
+
+            while (currentNumber <= 50) {
+                if (currentNumber >= 20) {
+                    result.push(currentNumber);
+                }
+                currentNumber += randomNumber; // Increment by randomNumber each time
+            }
+
+            return result;
+        }
+
+        // Generate three random numbers greater than 1 and less than 16
+        const randomOddNumber = Math.floor(Math.random() * 7) * 2 + 3;
+        const randomEvenNumber = Math.floor(Math.random() * 7) * 2 + 2;
+        const randomOtherUniqueNumber = generateUniqueRandomNumber(2, 16, [randomOddNumber, randomEvenNumber]);
+
+        // Display the numbers and group size in the HTML
+        document.getElementById('randomOddNumber').textContent = `Random Odd Number: ${randomOddNumber}`;
+        document.getElementById('randomEvenNumber').textContent = `Random Even Number: ${randomEvenNumber}`;
+        document.getElementById('randomOtherUniqueNumber').textContent = `Random Other Unique Number: ${randomOtherUniqueNumber}`;
+
+        // Calculate group size between 20 and 50
+        const groupSize = Math.floor(Math.random() * 31) + 20;
+
+        // Calculate the remainders
+        const remainderFromGroupsOfSizeRandomOddNumber = groupSize % randomOddNumber;
+        const remainderFromGroupsOfSizeRandomEvenNumber = groupSize % randomEvenNumber;
+        const remainderFromGroupsOfSizeRandomOtherUniqueNumber = groupSize % randomOtherUniqueNumber;
+
+        // Display the remainders
+        document.getElementById('remainderFromGroupsOfSizeRandomOddNumber').textContent = `Remainder from groups of ${randomOddNumber}: ${remainderFromGroupsOfSizeRandomOddNumber}`;
+        document.getElementById('remainderFromGroupsOfSizeRandomEvenNumber').textContent = `Remainder from groups of ${randomEvenNumber}: ${remainderFromGroupsOfSizeRandomEvenNumber}`;
+        document.getElementById('remainderFromGroupsOfSizeRandomOtherUniqueNumber').textContent = `Remainder from groups of ${randomOtherUniqueNumber}: ${remainderFromGroupsOfSizeRandomOtherUniqueNumber}`;
+
+        // Generate numbers in the range of 20 to 100 based on the random numbers and their remainders
+        const groupSizeOptionsFromRandomOddNumber = generateNumbersInRange(randomOddNumber, remainderFromGroupsOfSizeRandomOddNumber);
+        const groupSizeOptionsFromRandomEvenNumber = generateNumbersInRange(randomEvenNumber, remainderFromGroupsOfSizeRandomEvenNumber);
+        const groupSizeOptionsFromRandomOtherUniqueNumber = generateNumbersInRange(randomOtherUniqueNumber, remainderFromGroupsOfSizeRandomOtherUniqueNumber);
+
+        console.log(groupSizeOptionsFromRandomOddNumber);
+        console.log(groupSizeOptionsFromRandomEvenNumber);
+        console.log(groupSizeOptionsFromRandomOtherUniqueNumber);
+
+        // Estimate group size based in any numbers that are in all three groupSizeOptions arrays
+        const commonGroupSizes = groupSizeOptionsFromRandomOddNumber.filter(num => 
+            groupSizeOptionsFromRandomEvenNumber.includes(num) && 
+            groupSizeOptionsFromRandomOtherUniqueNumber.includes(num)
+        );
+
+        // Display estimated group size and group size
+        document.getElementById('estimatedGroupSize').textContent = `Estimated Group Size: ${commonGroupSizes}`;
+        document.getElementById('groupSize').textContent = `Actual Group Size: ${groupSize}`;
+    </script>
+</body>
+</html>
